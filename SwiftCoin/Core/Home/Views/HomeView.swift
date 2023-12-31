@@ -10,8 +10,11 @@ import SwiftUI
 struct HomeView: View {
     var body: some View {
         NavigationView {
-            ScrollView(.vertical,showsIndicators: false) {
-                Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+            ScrollView(.vertical,showsIndicators: true) {
+                TopMoversView()
+                Divider()
+                AllCoinsView()
+                
             }
             .navigationTitle("Live Prices")
         }
