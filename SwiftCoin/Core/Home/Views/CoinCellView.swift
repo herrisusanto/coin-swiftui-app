@@ -13,9 +13,10 @@ struct CoinCellView: View {
     
     var body: some View {
         HStack {
-            Text("\(coin.marketCapRank ?? 1)")
+            Text("\(coin.marketCapRank )")
                 .font(.caption)
-                .foregroundColor(.gray) 
+                .foregroundColor(.gray)
+            
             AsyncImage(url: URL(string: coin.image)){ image in
                 image
                     .image?.resizable()
@@ -30,21 +31,21 @@ struct CoinCellView: View {
                     .padding(.leading, 6)
                 Text(coin.symbol.uppercased())
                     .font(.caption)
-                    .padding(.leading, 4)
+                    .padding(.leading, 6)
             }
             .padding(.leading, 2)
             
             Spacer()
             
             VStack(alignment: .trailing){
-                Text("\(coin.currentPrice)")
+                Text("\(coin.currentPrice.toCurrency())")
                     .font(.subheadline)
                     .fontWeight(.bold)
-                    .padding(.leading, 4)
-                Text("\(coin.priceChangePercentage24H)")
+                    .padding(.leading, 6)
+                Text("\(coin.priceChangePercentage24H.toPercentString())")
                     .font(.caption)
                     .padding(.leading, 6)
-                    .foregroundColor(.red)
+                    .foregroundColor(coin.priceChangePercentage24H < 0 ?.red:.green)
             }
         }
         .padding(.horizontal)
@@ -52,6 +53,6 @@ struct CoinCellView: View {
     }
 }
 
-//#Preview {
-//    CoinCellView()
-//}
+#Preview {
+    CoinCellView(coin: MockData.sampleCoin)
+}

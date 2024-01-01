@@ -8,34 +8,39 @@
 import SwiftUI
 
 struct TopMoverItemView: View {
+    
+    var coin: Coin
+    
     var body: some View {
         VStack(alignment: .leading,spacing: 4) {
-            Image(systemName: "bitcoinsign.circle.fill")
-                .resizable()
-                .frame(width: 32,height: 32)
-                .foregroundColor(.orange)
-                .padding(.bottom, 8)
+            AsyncImage(url: URL(string: coin.image)){ image in
+                image
+                    .image?.resizable()
+                    .frame(width: 32,height: 32)
+                    .padding(.bottom, 8)
+            }
+            
             HStack(spacing: 2) {
-                Text("BTC")
+                Text(coin.symbol.uppercased())
                     .font(.caption)
                     .fontWeight(.bold)
-                Text("$20,330.00")
+                Text("\(coin.currentPrice.toCurrency())")
                     .font(.caption)
                     .foregroundColor(.gray)
             }
-            Text("+ 5.60%")
+            Text("\(coin.priceChangePercentage24H.toPercentString())")
                 .font(.title2)
-                .foregroundColor(.green)
+                .foregroundColor(coin.priceChangePercentage24H < 0 ?.red:.green)
         }
         .frame(width: 140, height: 140)
         .overlay {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color(.systemGray4), lineWidth: 2)
-        } 
+        }
         
     }
 }
 
 #Preview {
-    TopMoverItemView()
+    TopMoverItemView(coin: MockData.sampleCoin)
 }

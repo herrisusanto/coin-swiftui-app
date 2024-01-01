@@ -10,6 +10,7 @@ import SwiftUI
 final class HomeViewModel: ObservableObject {
     
     @Published var coins = [Coin]()
+    @Published var topMovingCoins = [Coin]()
     
     init() {
         fetchCoinData()
@@ -35,11 +36,25 @@ final class HomeViewModel: ObservableObject {
             do {
                 let coins = try JSONDecoder().decode([Coin].self, from: data)
                 print("DEBUG: COINS \(coins)")
-                self.coins = coins
+                DispatchQueue.main.async {
+                    self.coins = coins
+                    self.configureTopMovingCoins()
+                }
             }catch let error {
                 print("DEBUG: Failed to decode with error: \(error)")
             }
-           
+            
         }.resume()
     }
+    
+    func configureTopMovingCoins(){
+        let topMovers = coins.sorted(by: {$0.priceChangePercentage24H > $1.priceChangePercentage24H})
+        self.topMovingCoins = Array(topMovers.prefix(10))
+    }
+}
+
+struct MockData {
+    static let sampleCoin = Coin(id: "bitcoin", symbol: "btc", name: "Bitcoin", image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400", currentPrice: 42436, marketCapRank: 1, marketCap: 831683372239, fullyDilutedValuation: 891712616320, totalVolume: 14537342806, high24H: 42838, low24H: 42053, priceChange24H: 382.92, priceChangePercentage24H: 0.91055, marketCapChange24H: 7490145707, marketCapChangePercentage24H: 0.90879, circulatingSupply: 19586300, totalSupply: 21000000, maxSupply: 21000000, ath: 69045, athChangePercentage: -38.50166, athDate: "2021-11-10T14:24:11.849Z", atl: 67.81, atlChangePercentage: 62519.105, atlDate: "2013-07-06T00:00:00.000Z", lastUpdated: "2024-01-01T03:26:24.264Z")
+    
+    static let sampleCoins = [Coin(id: "bitcoin", symbol: "btc", name: "Bitcoin", image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400", currentPrice: 42436, marketCapRank: 1, marketCap: 831683372239, fullyDilutedValuation: 891712616320, totalVolume: 14537342806, high24H: 42838, low24H: 42053, priceChange24H: 382.92, priceChangePercentage24H: 0.91055, marketCapChange24H: 7490145707, marketCapChangePercentage24H: 0.90879, circulatingSupply: 19586300, totalSupply: 21000000, maxSupply: 21000000, ath: 69045, athChangePercentage: -38.50166, athDate: "2021-11-10T14:24:11.849Z", atl: 67.81, atlChangePercentage: 62519.105, atlDate: "2013-07-06T00:00:00.000Z", lastUpdated: "2024-01-01T03:26:24.264Z"),Coin(id: "bitcoin", symbol: "btc", name: "Bitcoin", image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400", currentPrice: 42436, marketCapRank: 1, marketCap: 831683372239, fullyDilutedValuation: 891712616320, totalVolume: 14537342806, high24H: 42838, low24H: 42053, priceChange24H: 382.92, priceChangePercentage24H: 0.91055, marketCapChange24H: 7490145707, marketCapChangePercentage24H: 0.90879, circulatingSupply: 19586300, totalSupply: 21000000, maxSupply: 21000000, ath: 69045, athChangePercentage: -38.50166, athDate: "2021-11-10T14:24:11.849Z", atl: 67.81, atlChangePercentage: 62519.105, atlDate: "2013-07-06T00:00:00.000Z", lastUpdated: "2024-01-01T03:26:24.264Z"),Coin(id: "bitcoin", symbol: "btc", name: "Bitcoin", image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400", currentPrice: 42436, marketCapRank: 1, marketCap: 831683372239, fullyDilutedValuation: 891712616320, totalVolume: 14537342806, high24H: 42838, low24H: 42053, priceChange24H: 382.92, priceChangePercentage24H: 0.91055, marketCapChange24H: 7490145707, marketCapChangePercentage24H: 0.90879, circulatingSupply: 19586300, totalSupply: 21000000, maxSupply: 21000000, ath: 69045, athChangePercentage: -38.50166, athDate: "2021-11-10T14:24:11.849Z", atl: 67.81, atlChangePercentage: 62519.105, atlDate: "2013-07-06T00:00:00.000Z", lastUpdated: "2024-01-01T03:26:24.264Z")]
 }
