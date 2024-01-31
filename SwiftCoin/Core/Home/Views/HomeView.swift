@@ -7,9 +7,10 @@
 
 import SwiftUI
 
+
 struct HomeView: View {
     
-    @StateObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = HomeViewModel() 
     
     var body: some View {
         NavigationView {
@@ -19,11 +20,11 @@ struct HomeView: View {
                 AllCoinsView(viewModel: viewModel)
                 
             }
-            .navigationTitle("Live Prices")
+            .navigationTitle("Live Prices") 
         }
     }
 }
 
 #Preview {
-    HomeView().environmentObject(HomeViewModel())
+    HomeView().environmentObject(HomeViewModel()).preferredColorScheme(.dark)
 }

@@ -10,6 +10,7 @@ import SwiftUI
 struct AllCoinsView: View {
     
     @StateObject var viewModel: HomeViewModel
+    @State private var showAlert = false
     
     var body: some View {
         VStack(alignment: .leading){
@@ -32,6 +33,17 @@ struct AllCoinsView: View {
                     CoinCellView(coin: coin)
                 }
             }
+            .refreshable {
+                viewModel.handleRefresh()
+            }
+            .onReceive(viewModel.$error, perform: { error in
+                if error != nil {
+                    showAlert.toggle()
+                }
+            })
+            .alert(isPresented: $showAlert, content: {
+                Alert(title: Text("Error"), message: Text(viewModel.error?.localizedDescription ?? ""))
+            })
             
         }
         
